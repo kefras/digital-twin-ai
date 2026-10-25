@@ -1,0 +1,15 @@
+cloud servers provide computing resources
+cloud infrastructure supports applications
+aws provides cloud computing services
+terraform automates infrastructure deployment
+docker containers package applications
+kubernetes manages containers and services
+security protects cloud infrastructure
+monitoring detects server failures
+automation improves cloud operations
+networks connect servers and databases
+cloud engineers deploy secure infrastructure
+aws cloud services support computing workloads
+terraform manages cloud infrastructure as code
+containers run applications across cloud servers
+monitoring and security protect applications

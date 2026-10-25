@@ -1,0 +1,10 @@
+Cloud servers provide computing resources.
+Cloud infrastructure supports automation.
+Network security protects cloud servers.
+DevOps automation improves deployments.
+Docker containers run applications.
+Kubernetes manages Docker containers.
+AWS provides cloud infrastructure.
+Monitoring detects server failures.
+Security monitoring protects networks.
+Terraform automates cloud infrastructure.
