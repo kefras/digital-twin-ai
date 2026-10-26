@@ -6,3 +6,4 @@ __pycache__/
 models/*
 !models/.gitkeep
 *.zip
+.streamlit/secrets.toml
