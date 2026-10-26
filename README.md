@@ -1,172 +1,389 @@
-# Digital Twin Word Embeddings — Word2Vec & GloVe
+# Digital Twin AI — Word2Vec, GloVe, RAG & Gemini PDF Chat
 
-An educational semantic-search prototype exploring Word2Vec, a custom GloVe implementation, cosine similarity, and PCA visualization, developed for a Week 2 AI School embeddings challenge.
+**An interactive AI-powered document question-answering and semantic search application built with Python, Word2Vec, GloVe, Sentence Transformers, Google Gemini, and Streamlit.**
 
-## Project status
+[**Live Demo — Try Digital Twin AI**](https://digitaltwin1.streamlit.app) | [**GitHub Repository**](https://github.com/kefras/digital-twin-word2vec-glove-embeddings)
 
-- **Original completed Colab notebook included:** `notebooks/Week2_08_embeddings_deep_dive_completed.ipynb`, including its saved outputs.
-- **Original implementation included:** `src/glove.py` contains the `SimpleGloVe` class extracted from Stage 3 of the submitted notebook, without algorithmic changes.
-- **Original sample corpus included:** `data/original_colab_corpus.txt` reproduces the ten source documents from Stage 1.
-- **Runnable integration:** `src/integrated_demo.py` trains both algorithms on the original corpus and searches the vocabulary.
-- **Not included:** trained `.model` and `.pkl` binaries (not part of the uploaded notebook); copy them from Colab if needed.
-- **Scope:** educational word-level semantic search prototype, not a deployed Digital Twin service.
+## Overview
 
-## Architecture
+Digital Twin AI began as an educational word embeddings project for a Week 2 AI School challenge, exploring Word2Vec, a custom GloVe implementation, cosine similarity, and PCA visualization.
 
-See [architecture diagram](diagrams/architecture.md).
+The project has since evolved into an interactive AI application combining traditional word embeddings, semantic retrieval, Retrieval-Augmented Generation (RAG), and conversational PDF question answering powered by Google Gemini.
 
-## Quick start
+Users can explore a customizable knowledge base or upload PDF documents and ask questions based on their contents.
 
-Python 3.11 recommended.
+## Key Features
 
-```bash
-python -m venv .venv
-# Windows PowerShell:
-.venv\Scripts\Activate.ps1
-# macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
-python -m unittest discover -s tests -v
-python -m src.train
-python -m src.demo --query cloud --top-k 5
-```
+### 1. Word Embeddings and Semantic Search
 
-Results will vary with corpus size, training and library versions. This toy corpus is not sufficient to establish robust semantic accuracy.
+- Word2Vec training and word-level semantic search
+- Custom GloVe implementation using the original notebook algorithm
+- Cosine similarity for comparing word vectors
+- PCA visualization of embedding relationships
+- Search ranking, input validation, and unknown-word handling
 
-## Run the original notebook implementation locally
+### 2. Knowledge Base Question Answering
 
-```bash
-python -m src.integrated_demo
-```
+- Editable knowledge base in Streamlit
+- Document chunking and sentence embeddings
+- Semantic retrieval of relevant context
+- Grounded answers based on retrieved information
+- Abstention when sufficient information is unavailable
+- Response status, execution time, and retrieved context display
 
-The full notebook is included in `notebooks/`. It uses Colab-specific commands for installation and downloading; run those cells in Google Colab rather than a standard Python interpreter. The original GloVe class is also available as a standalone import from `src.glove`.
+### 3. Gemini-Powered PDF AI Chat
 
-To reuse saved Colab model binaries, place them in `models/` (ignored by Git). Never unpickle files from untrusted sources. The notebook's `SimpleGloVe` class was defined in `__main__` when pickled, so a separate Python process may need to expose the class under that name before loading. Re-training with `src.integrated_demo` avoids this portability issue.
+- PDF upload and text extraction
+- Semantic retrieval using Sentence Transformers
+- Google Gemini integration for natural-language answers
+- Multi-turn conversations and follow-up questions
+- Document-grounded responses
+- PDF page references and expandable document sources
+- Session-based conversation history
+- Graceful handling of API errors and unavailable services
 
-## Evidence from Colab screenshots
+### 4. Deployment and Testing
 
-- 10 documents and 42 tokens were reported in the original preprocessing exercise.
-- Word2Vec reported 29 vocabulary items and 50-dimensional vectors.
-- Custom GloVe reported 29 vocabulary items and 20-dimensional vectors, with loss decreasing from approximately 0.6717 to 0.5162 over 300 epochs.
-- Semantic search returned five neighbors of `cloud` for each model and handled unknown-word input.
-- Saved files reported: `word2vec.model` and `glove.pkl`.
+- Interactive Streamlit web application
+- Deployment on Streamlit Community Cloud
+- GitHub Actions continuous integration
+- Python unit tests
+- Environment-based API key configuration
 
-These are observed educational experiment results, not benchmarked production metrics.
+## Live Application
 
-## Testing
+**Try the deployed application:**
 
-`python -m unittest discover -s tests -v` checks search ranking, case normalization, error handling, cosine similarity, and missing-model behavior. These are isolated unit tests; additional tests exercise the original custom GloVe training and search adapter.
+https://digitaltwin1.streamlit.app
 
-## Future improvements
+The interface provides two modes:
 
-- Larger domain-specific corpus and held-out evaluation
-- Phrase/sentence search and out-of-vocabulary handling
-- Interactive user interface and API
-- Model versioning and reproducible benchmarks
-- Actual Digital Twin integration
+| Mode | Description |
+|---|---|
+| Knowledge Base Q&A | Ask questions about an editable knowledge base using semantic retrieval and grounded answer extraction |
+| PDF AI Chat | Upload a PDF and ask conversational questions using semantic retrieval and Google Gemini |
 
-
-## Digital Twin AI — Retrieval-Augmented Generation (RAG)
-
-This project now includes a Retrieval-Augmented Generation (RAG) application that uses semantic search to retrieve relevant information from a customizable knowledge base.
-
-### Features
-
-- **Document chunking:** Splits knowledge-base content into smaller, overlapping sections.
-- **Semantic retrieval:** Uses sentence embeddings to identify relevant text.
-- **Grounded question answering:** Returns answers based on retrieved knowledge-base content.
-- **Abstention handling:** Responds when insufficient relevant information is available.
-- **Interactive interface:** Provides a Streamlit application for asking questions and editing knowledge-base content.
-- **Automated testing:** Includes unit tests for retrieval, input validation, and question-answering behavior.
-
-### Architecture
+## System Architecture
 
 ```text
-User Question
-     |
-     v
-Streamlit Interface
-     |
-     v
-DigitalTwinRAG Pipeline
-     |
-     +--> Knowledge Base
-     |        |
-     |        v
-     |    Document Chunker
-     |        |
-     |        v
-     |    Sentence Embeddings
-     |        |
-     |        v
-     |    Semantic Retriever
-     |        |
-     +--------+
-     |
-     v
-Relevant Context
-     |
-     v
-Grounded Answer / Abstention
-     |
-     v
-Streamlit Results
+                       USER
+                         |
+                         v
+                  STREAMLIT UI
+                         |
+             +-----------+-----------+
+             |                       |
+             v                       v
+     KNOWLEDGE BASE Q&A          PDF AI CHAT
+             |                       |
+             v                       v
+     Knowledge Base             PDF Upload
+             |                       |
+             v                       v
+     Document Chunking          Text Extraction
+             |                       |
+             v                       v
+     Sentence Embeddings        Semantic Retrieval
+             |                       |
+             v                       v
+     Semantic Retriever         Relevant PDF Context
+             |                       |
+             v                       v
+     Grounded Answer            Google Gemini API
+       or Abstention                |
+             |                       v
+             |                Conversational Answer
+             |                with Page References
+             |                       |
+             +-----------+-----------+
+                         |
+                         v
+                  STREAMLIT RESULTS
 ```
 
-### Installation
+The original Word2Vec and GloVe experiments remain available as a separate educational component.
 
-Use Python 3.12 and install the required packages:
+See the [original architecture documentation](diagrams/architecture.md).
+
+## Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| Python | Application development |
+| Gensim | Word2Vec embeddings |
+| Custom GloVe | Word embedding implementation |
+| NumPy and SciPy | Numerical computation |
+| Scikit-learn | Cosine similarity and PCA |
+| Sentence Transformers | Semantic text embeddings |
+| Google Gemini API | Generative PDF question answering |
+| Streamlit | Interactive web application |
+| Git and GitHub | Version control |
+| GitHub Actions | Continuous integration |
+| Streamlit Community Cloud | Web deployment |
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.12
+- Git
+- Internet access for downloading embedding models and using Gemini
+- Google Gemini API key for PDF AI Chat
+
+### 1. Clone the Repository
 
 ```bash
+git clone https://github.com/kefras/digital-twin-word2vec-glove-embeddings.git
+cd digital-twin-word2vec-glove-embeddings
+```
+
+### 2. Create a Virtual Environment
+
+On Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+On macOS or Linux:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### 3. Install Dependencies
+
+```bash
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-### Run the RAG Application
+### 4. Configure Gemini API Access
 
-From the project root:
+Create a folder named `.streamlit` in the project root if it does not already exist.
+
+Inside that folder, create a file named `secrets.toml`:
+
+```toml
+GEMINI_API_KEY = "YOUR_GEMINI_API_KEY"
+```
+
+Replace the placeholder with your own API key.
+
+**Security:** Never commit API keys or `.streamlit/secrets.toml` to GitHub. The secrets file must remain excluded by `.gitignore`.
+
+For Streamlit Community Cloud, configure the same secret in the deployed application's settings.
+
+### 5. Launch Digital Twin AI
+
+From the repository root:
 
 ```bash
 python -m streamlit run src/rag/app.py
 ```
 
-Open the local URL displayed in your terminal, typically:
+Open the local URL displayed in the terminal, usually:
 
-`http://localhost:8501`
+http://localhost:8501
 
-### Run Automated Tests
+## Using the Application
 
-```bash
-python -m unittest discover -s tests -v
-```
+### Knowledge Base Q&A
 
-**Latest local test result:** 21 tests passed.
+1. Select **Knowledge Base Q&A** from the sidebar.
+2. Enter or edit the knowledge base content.
+3. Type a question.
+4. Click **Ask Digital Twin**.
+5. Review the answer, status, response time, and retrieved context.
 
-### Project Structure
-
-```text
-src/
-  rag/
-    __init__.py
-    app.py
-    chunker.py
-    pipeline.py
-    retriever.py
-
-tests/
-  test_rag.py
-```
-
-### Example Questions
+Example questions:
 
 - What is Docker used for?
 - What does Kubernetes manage?
 - Which tool automates cloud infrastructure?
 - Which platform provides cloud computing services?
 
-The application is designed to answer questions supported by the provided knowledge base and abstain when sufficient information is unavailable.
+This mode uses semantic retrieval and grounded answer extraction rather than Gemini generation.
 
-### Limitations
+### PDF AI Chat
 
-This implementation is a prototype. It uses semantic retrieval and grounded answer extraction rather than a full generative language model. Retrieval accuracy depends on the quality and coverage of the knowledge base.
+1. Select **PDF AI Chat** from the sidebar.
+2. Upload a text-based PDF document.
+3. Enter a question about its contents.
+4. Review the generated answer and page references.
+5. Ask follow-up questions within the same conversation.
+
+Example conversation:
+
+**User:** What does Kubernetes do?
+
+**Digital Twin AI:** Kubernetes automates container deployment and scaling (Page 1).
+
+**User:** How does it compare with Docker?
+
+**Digital Twin AI:** Docker packages applications into portable containers, whereas Kubernetes automates container deployment and scaling (Page 1).
+
+The example illustrates document-grounded answers and conversational follow-up handling.
+
+## Original Word2Vec and GloVe Experiments
+
+The original educational implementation remains part of the repository.
+
+### Included Materials
+
+- `notebooks/Week2_08_embeddings_deep_dive_completed.ipynb` — completed Colab notebook with saved outputs
+- `src/glove.py` — original `SimpleGloVe` implementation extracted from the notebook
+- `data/original_colab_corpus.txt` — original ten-document sample corpus
+- `src/integrated_demo.py` — local Word2Vec and GloVe integration
+
+### Run the Original Experiment
+
+```bash
+python -m src.integrated_demo
+```
+
+Additional training and search commands:
+
+```bash
+python -m src.train
+python -m src.demo --query cloud --top-k 5
+```
+
+### Original Experiment Results
+
+The completed Colab exercise reported:
+
+| Metric | Result |
+|---|---|
+| Source documents | 10 |
+| Preprocessed tokens | 42 |
+| Word2Vec vocabulary | 29 words |
+| Word2Vec vector dimensions | 50 |
+| GloVe vocabulary | 29 words |
+| GloVe vector dimensions | 20 |
+| GloVe training epochs | 300 |
+| GloVe loss | Approximately 0.6717 to 0.5162 |
+
+These are educational experiment observations, not production benchmarks.
+
+Trained `.model` and `.pkl` files are not included in the repository. The models can be regenerated using the supplied code.
+
+**Security:** Do not unpickle model files obtained from untrusted sources.
+
+## Automated Testing
+
+Run the existing test suite:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+**Latest verified local result: 21 tests passed.**
+
+The existing tests cover areas including:
+
+- Word2Vec and GloVe search behavior
+- Cosine similarity
+- Search ranking
+- Invalid input and unknown words
+- Missing-model handling
+- RAG retrieval behavior
+- Question-answering response structure
+- Abstention handling
+
+The PDF Chat feature has also been manually tested locally and on Streamlit Cloud. Dedicated automated PDF Chat tests are a planned improvement.
+
+## Project Structure
+
+```text
+digital-twin-embeddings/
+|
+|-- .github/
+|   `-- workflows/
+|       `-- ci.yml
+|
+|-- data/
+|   `-- original_colab_corpus.txt
+|
+|-- diagrams/
+|   `-- architecture.md
+|
+|-- notebooks/
+|   `-- Week2_08_embeddings_deep_dive_completed.ipynb
+|
+|-- src/
+|   |-- rag/
+|   |   |-- __init__.py
+|   |   |-- app.py
+|   |   |-- chunker.py
+|   |   |-- pipeline.py
+|   |   |-- retriever.py
+|   |   |-- pdf_loader.py
+|   |   |-- semantic_retriever.py
+|   |   `-- pdf_chat.py
+|   |
+|   |-- glove.py
+|   |-- integrated_demo.py
+|   |-- train.py
+|   `-- demo.py
+|
+|-- tests/
+|   |-- test_original_glove.py
+|   |-- test_rag.py
+|   `-- test_search.py
+|
+|-- .gitignore
+|-- LICENSE
+|-- README.md
+`-- requirements.txt
+```
+
+Local test scripts, sample PDFs, secrets, virtual environments, and generated model binaries may exist during development but are not required to be committed.
+
+## Screenshots
+
+Screenshots of the deployed application can be added to the repository to demonstrate:
+
+- Knowledge Base Q&A
+- PDF upload
+- Gemini-generated answers
+- Multi-turn PDF conversations
+- Document page references
+- Automated test results
+
+## Limitations
+
+Digital Twin AI is an educational and portfolio-oriented prototype.
+
+- Semantic retrieval quality depends on the embedding model and source content.
+- PDF text extraction may not work with scanned documents without OCR.
+- Gemini responses depend on API availability, model access, and usage limits.
+- Generated answers should be checked against their cited source pages.
+- Conversation history is limited to the active Streamlit session.
+- The original small Word2Vec and GloVe corpus is not suitable for production semantic search evaluation.
+- The application is not a real-world physical digital twin or a production document-management system.
+
+## Future Improvements
+
+- Automated tests for PDF extraction, semantic retrieval, and Gemini error handling
+- Support for multiple PDF documents
+- Improved document chunking and retrieval evaluation
+- Persistent conversation history
+- Vector database integration
+- Document preview with highlighted source passages
+- Performance benchmarking
+- Optional OCR support
+- Authentication and access controls
+- Integration with domain-specific Digital Twin systems
+
+## Project Background
+
+Originally developed for a Week 2 AI School embeddings challenge, this project demonstrates a progression from traditional word embeddings to practical semantic retrieval and AI-assisted document question answering.
+
+It serves as a hands-on learning project in machine learning, natural language processing, Retrieval-Augmented Generation, generative AI integration, and cloud application deployment.
+
 ## License
 
-MIT — see LICENSE.
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
