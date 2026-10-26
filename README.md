@@ -64,6 +64,109 @@ These are observed educational experiment results, not benchmarked production me
 - Model versioning and reproducible benchmarks
 - Actual Digital Twin integration
 
+
+## Digital Twin AI — Retrieval-Augmented Generation (RAG)
+
+This project now includes a Retrieval-Augmented Generation (RAG) application that uses semantic search to retrieve relevant information from a customizable knowledge base.
+
+### Features
+
+- **Document chunking:** Splits knowledge-base content into smaller, overlapping sections.
+- **Semantic retrieval:** Uses sentence embeddings to identify relevant text.
+- **Grounded question answering:** Returns answers based on retrieved knowledge-base content.
+- **Abstention handling:** Responds when insufficient relevant information is available.
+- **Interactive interface:** Provides a Streamlit application for asking questions and editing knowledge-base content.
+- **Automated testing:** Includes unit tests for retrieval, input validation, and question-answering behavior.
+
+### Architecture
+
+```text
+User Question
+     |
+     v
+Streamlit Interface
+     |
+     v
+DigitalTwinRAG Pipeline
+     |
+     +--> Knowledge Base
+     |        |
+     |        v
+     |    Document Chunker
+     |        |
+     |        v
+     |    Sentence Embeddings
+     |        |
+     |        v
+     |    Semantic Retriever
+     |        |
+     +--------+
+     |
+     v
+Relevant Context
+     |
+     v
+Grounded Answer / Abstention
+     |
+     v
+Streamlit Results
+```
+
+### Installation
+
+Use Python 3.12 and install the required packages:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### Run the RAG Application
+
+From the project root:
+
+```bash
+python -m streamlit run src/rag/app.py
+```
+
+Open the local URL displayed in your terminal, typically:
+
+`http://localhost:8501`
+
+### Run Automated Tests
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+**Latest local test result:** 21 tests passed.
+
+### Project Structure
+
+```text
+src/
+  rag/
+    __init__.py
+    app.py
+    chunker.py
+    pipeline.py
+    retriever.py
+
+tests/
+  test_rag.py
+```
+
+### Example Questions
+
+- What is Docker used for?
+- What does Kubernetes manage?
+- Which tool automates cloud infrastructure?
+- Which platform provides cloud computing services?
+
+The application is designed to answer questions supported by the provided knowledge base and abstain when sufficient information is unavailable.
+
+### Limitations
+
+This implementation is a prototype. It uses semantic retrieval and grounded answer extraction rather than a full generative language model. Retrieval accuracy depends on the quality and coverage of the knowledge base.
 ## License
 
 MIT — see LICENSE.
