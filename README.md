@@ -384,6 +384,32 @@ Originally developed for a Week 2 AI School embeddings challenge, this project d
 
 It serves as a hands-on learning project in machine learning, natural language processing, Retrieval-Augmented Generation, generative AI integration, and cloud application deployment.
 
+## Live Demo
+
+Try the deployed Digital Twin AI Assistant:
+
+**[Launch Digital Twin AI](https://digitaltwin1.streamlit.app/)**
+
+The application includes a knowledge-base question-answering interface and an AI-powered PDF chat system using semantic retrieval and Google Gemini.
+
+## Application Screenshots
+
+### Knowledge Base Question Answering
+
+![Knowledge Base Q&A](screenshots/knowledge-base/qa-demo-final.png)
+
+### PDF AI Chat
+
+Upload a PDF document and ask questions about its contents.
+
+![PDF AI Chat](screenshots/pdf-chat/pdf-upload.png)
+
+### Automated Testing
+
+The project successfully passed 21 automated unit tests.
+
+![21 Tests Passed](screenshots/tests/21-tests-passed.png)
+
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE).
